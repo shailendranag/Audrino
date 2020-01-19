@@ -1,0 +1,122 @@
+#include <LiquidCrystal.h> //import lcd library
+#include <Keypad.h> //import keypad library
+
+LiquidCrystal lcd(5, 4, 3, 2, 1, 0); //lcd pins
+const byte ROWS = 4; // four rows
+const byte COLS = 3; // four columns
+
+//define the keymap
+char keys [ROWS] [COLS] = {
+  {'1', '2', '3'},
+  {'4', '5', '6'},
+  {'7', 'R', 'K'},
+  {'*', '+', '-'}
+};
+byte rowPins[ROWS] = {
+  6, 7, 8, 9}; //connect keypad ROW1, ROW2, ROW3, ROW4 to these arduino pins
+byte colPins[COLS] = {
+  10, 11, 12}; //connect keypad COL1, COL2, COL3, COL4 to these arduino pins
+
+//create the keypad
+Keypad myKeypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+String str,str1,str2;
+int flag=0,ans,flag1=0;
+void setup() {
+  // put your setup code here, to run once:
+lcd.begin(16,2);
+  lcd.setCursor(2,0);
+  //lcd.print("Hello Meids");
+  //delay(2500);
+  lcd.setCursor(0,0);
+  lcd.print("I am Calculator");
+  delay(1000);
+  lcd.clear();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+   char key = myKeypad.getKey();
+   if(key!=NO_KEY)
+   {
+    switch(key)
+    {
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      if (flag==0)
+      {
+      str=str+key;
+      lcd.print(key);
+      }
+      else
+      {
+        str1=str1+key;
+        lcd.print(key);
+      }
+      break;
+    case 'K':
+    flag=1;
+    lcd.clear();
+    break;
+    case 'R':
+    lcd.clear();
+    lcd.print("Reset ...");
+    delay(1500);
+    ans=0;
+    flag=0;
+    str="";
+    str1="";
+    lcd.clear();
+    break;
+    
+    case '+':
+    ans=str.toInt()+str1.toInt();
+    str2=str +'+'+ str1;
+    lcd.clear();
+    lcd.setCursor(1,0);
+    lcd.print(ans);
+    lcd.setCursor(8,0);
+    lcd.print("(Ans.)");
+    lcd.setCursor(1,1);
+    lcd.print(str2);
+    lcd.setCursor(10,1);
+    lcd.print("(I/P)");
+    break;
+    
+    case '*':
+    ans=str.toInt()*str1.toInt();
+    str2=str+'x'+str1;
+    lcd.clear();
+    lcd.setCursor(1,0);
+    lcd.print(ans);
+    lcd.setCursor(8,0);
+    lcd.print("(Ans.)");
+    lcd.setCursor(1,1);
+    lcd.print(str2);
+    lcd.setCursor(10,1);
+    lcd.print("(I/P)");
+    break;
+    
+    case '-':
+    ans=str.toInt()-str1.toInt();
+    str2=str+'-'+str1;
+    lcd.clear();
+    lcd.setCursor(1,0);
+    lcd.print(ans);
+    lcd.setCursor(8,0);
+    lcd.print("(Ans.)");
+    lcd.setCursor(1,1);
+    lcd.print(str2);
+    lcd.setCursor(1,1);
+    lcd.print(str2);
+    lcd.setCursor(10,1);
+    lcd.print("(I/P)");
+    break;
+    }
+   }
+}
